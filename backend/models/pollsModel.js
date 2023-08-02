@@ -14,7 +14,7 @@ const voteSchema = new mongoose.Schema({
 
 const PollSchema = new mongoose.Schema({
   question: {
-    type: [String, 'Please add poll question'],
+    type: String,
     required: true,
     unique: true,
     maxlength: [500, 'Question cannot be more than 500 characters'],
@@ -42,7 +42,7 @@ const PollSchema = new mongoose.Schema({
 });
 
 PollSchema.pre('save', function (next) {
-  this.slug = slugify(this.question[0], { lower: true });
+  this.slug = slugify(this.question, { lower: true });
   next();
 });
 

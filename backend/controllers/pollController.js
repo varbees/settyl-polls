@@ -1,5 +1,6 @@
 import asyncHandler from 'express-async-handler';
 import Poll from '../models/pollsModel.js';
+import { socketIo } from '../server.js';
 
 // @desc  Create a new poll
 // route  POST /api/polls
@@ -84,6 +85,62 @@ const updatePoll = asyncHandler(async (req, res) => {
   res.status(200).json(poll);
 });
 
+// @desc  Vote a poll
+// route  POST /api/polls/:id/vote
+// access public
+const votePoll = asyncHandler(async (req, res) => {
+  const pollId = req.params.id;
+  const { votedOption } = req.body;
+  const userId = req.userId;
+  const poll = await Poll.findByIdOrSlug(pollId);
+  if (!poll) {
+    res.status(400);
+    throw new Error(`Poll not found with id ${pollId}`);
+  }
+
+  const existingVote = poll.votes.find(vote => vote.userId === userId);
+  if (existingVote) {
+    res.status(403);
+    throw new Error('Looks like you already participated on this poll');
+  }
+
+  const option = await poll.options.find(
+    option => option.optionText === votedOption
+  );
+  if (!option) {
+    res.status(400);
+    throw new Error('Invalid option');
+  }
+
+  option.votes += 1;
+
+  poll.votes.push({
+    userId,
+    votedOption,
+  });
+
+  poll.totalVotes += 1;
+
+  await poll.save();
+
+  //format may change in future based on frontend Requirements
+  const updatedVotingData = {
+    id: poll._id,
+    question: poll.question,
+    options: poll.options.map(option => ({
+      id: option._id,
+      optionText: option.optionText,
+      votes: option.votes,
+    })),
+  };
+
+  socketIo.emit('votingUpdate', updatedVotingData);
+
+  res
+    .status(200)
+    .json({ message: `Voting successfully done on this poll - ${pollId}` });
+});
+
 // @desc  Delete poll by id
 // route  DELETE /api/polls/:id
 // access public
@@ -96,4 +153,4 @@ const deletePoll = asyncHandler(async (req, res) => {
   res.status(200).json({ success: true });
 });
 
-export { createPoll, getPolls, getPoll, updatePoll, deletePoll };
+export { createPoll, getPolls, getPoll, updatePoll, votePoll, deletePoll };
