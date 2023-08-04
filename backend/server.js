@@ -12,8 +12,10 @@ connectDB();
 const app = express();
 
 app.use(express.json());
+
 app.use(cookieParser());
 app.use(setUserCookie);
+
 app.use(rateLimitMiddleware);
 
 app.use('/api', router);
