@@ -13,14 +13,14 @@ const Navbar = ({ title }) => {
         <div className='flex-1 px-2 mx-2'>
           <div className='flex justify-end '>
             <Link
-              to='/polls'
-              className='py-2 mr-4 btn btn-sm btn-secondary border  hover:border-white rounded-btn normal-case  hover:text-white'
+              to='/'
+              className='py-2 btn btn-sm btn-secondary border rounded-btn normal-case hover:text-success hover:bg-white hover:border-success mr-2'
             >
               Polls
             </Link>
             <Link
               to='/about'
-              className='py-2 btn btn-sm btn-secondary border  hover:border-white rounded-btn normal-case hover:text-white'
+              className='py-2 btn btn-sm btn-secondary border rounded-btn normal-case hover:text-success hover:bg-white hover:border-success'
             >
               About
             </Link>
