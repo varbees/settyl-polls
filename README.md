@@ -3,7 +3,7 @@ Settyl Polls! It's about interactive polls with real-time updates. Frontend buil
 
 
 
-#Usage
+# Usage
 ## Create a .env file with the following variables
 NODE_ENV=development
 PORT=8005
