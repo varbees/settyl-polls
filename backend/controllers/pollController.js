@@ -101,6 +101,11 @@ const votePoll = asyncHandler(async (req, res) => {
     throw new Error(`Poll not found with id ${pollId}`);
   }
 
+  if (!poll.isActive) {
+    res.status(400);
+    throw new Error(`Poll is locked`);
+  }
+
   const existingVote = poll.votes.find(vote => vote.userId === userId);
   if (existingVote) {
     res.status(403);
