@@ -33,26 +33,29 @@ const VotingOption = ({ poll, option, handleVote, hasVoted, checkVote }) => {
       socket.off('disconnect', onDisconnect);
       socket.off('votingUpdate', updatedVotingData);
     };
-
-    return () => socket.off('votingUpdate');
-  }, [hasVoted]);
+  }, []);
 
   return (
-    <div
-      key={option._id}
-      className='btn btn-wide btn-secondary rounded-xl normal-case hover:text-accent-content hover:btn-accent'
-      onClick={() => handleVote(option.optionText)}
-    >
-      <div className=''>{option.optionText}</div>
-      {hasVoted && (
-        <progress
-          className='progress progress-accent w-56 mt-2'
-          value={percentage}
-          max='100'
-        >
-          kk
-        </progress>
-      )}
+    <div className='card-content p-3' key={option._id}>
+      <div
+        className='btn btn-wide btn-secondary rounded-xl normal-case hover:text-accent-content hover:btn-accent'
+        onClick={() => handleVote(option.optionText)}
+      >
+        <div className='flex justify-around align-middle'>
+          {hasVoted && <p className='mb-2'>{Math.round(percentage)}% say: </p>}
+          <p className=''>{option.optionText}</p>
+        </div>
+
+        {hasVoted && (
+          <div>
+            <progress
+              className='progress progress-accent w-56 mt-2'
+              value={percentage}
+              max='100'
+            ></progress>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
