@@ -5,21 +5,36 @@ import PollContext from '../contexts/PollContext';
 import VotingOption from '../components/votes/VotingOption';
 import Spinner from '../components/layout/Spinner';
 import { toast } from 'react-toastify';
+import socket from '../utils/socket';
 
 const Poll = () => {
   const [votedOption, setVotedOption] = useState(null);
   const { id } = useParams();
-  const { poll, isLoading, getPollById, voteById, hasVoted, checkVote } =
-    useContext(PollContext);
+  const {
+    poll,
+    isLoading,
+    getPollById,
+    voteById,
+    hasVoted,
+    checkVote,
+    dispatch,
+  } = useContext(PollContext);
 
   useEffect(() => {
     getPollById(id);
+    socket.on('votingUpdated', updatedPoll => {
+      dispatch({ type: 'GET_POLL', payload: updatedPoll });
+    });
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [poll.totalVotes]);
 
   const handleVote = async optionText => {
     try {
       const status = await voteById(poll._id, optionText);
+      socket.emit('votingUpdate', {
+        updatedPoll: { ...status.poll },
+      });
       setVotedOption(optionText);
       toast.info(status.message);
     } catch (err) {

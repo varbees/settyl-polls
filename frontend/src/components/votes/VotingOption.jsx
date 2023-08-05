@@ -1,42 +1,19 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import socket from '../../utils/socket';
 import Spinner from '../layout/Spinner';
 
 const VotingOption = ({ poll, option, handleVote, hasVoted, checkVote }) => {
   const percentage = (option.votes / poll.totalVotes) * 100;
 
   const [loading, setLoading] = useState(true);
-  const [isConnected, setIsConnected] = useState(socket.connected);
 
   useEffect(() => {
-    function onConnect() {
-      setIsConnected(true);
-    }
-
-    function onDisconnect() {
-      setIsConnected(false);
-    }
-
-    function updatedVotingData() {
-      console.log('Received voting update:', updatedVotingData);
-    }
-
-    socket.on('connect', onConnect);
-    socket.on('votingUpdate', updatedVotingData);
-    socket.on('disconnect', onDisconnect);
-
     const fetchData = async () => {
       setLoading(true);
       await checkVote(poll._id);
       setLoading(false);
     };
     fetchData();
-    return () => {
-      socket.off('connect', onConnect);
-      socket.off('disconnect', onDisconnect);
-      socket.off('votingUpdate', updatedVotingData);
-    };
   }, [poll._id]);
 
   return loading ? (

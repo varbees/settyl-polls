@@ -1,7 +1,8 @@
 import express from 'express';
+import http from 'http';
+import { Server } from 'socket.io';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import { Server } from 'socket.io';
 import { __port__, __prod__ } from './constants.js';
 import connectDB from './config/db.js';
 import router from './routes/pollRoutes.js';
@@ -11,10 +12,9 @@ import rateLimitMiddleware from './middleware/rateLimitMiddleware.js';
 
 connectDB();
 const app = express();
-
 const corsOptions = {
   origin: 'http://localhost:5173',
-  methods: ['GET', 'POST', 'PUT'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 };
 
@@ -34,18 +34,22 @@ app.get('/', (req, res) => {
 app.use(notFound);
 app.use(errorHandler);
 
-const server = app.listen(__port__, () =>
-  console.log(`Server running on port ${__port__}`)
-);
+const server = http.createServer(app);
 
 const io = new Server(server);
 
 io.on('connection', socket => {
-  console.log('User connected');
+  console.log(`User connected: ${socket.id}`);
+
+  socket.on('votingUpdate', data => io.emit('votingUpdated', data.updatedPoll));
 
   socket.on('disconnect', () => {
     console.log('User disconnected');
   });
 });
+
+server.listen(__port__, () =>
+  console.log(`Server running on port ${__port__}`)
+);
 
 export const socketIo = io;

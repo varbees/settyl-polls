@@ -1,6 +1,5 @@
 import asyncHandler from 'express-async-handler';
 import Poll from '../models/pollsModel.js';
-import { socketIo } from '../server.js';
 
 // @desc  Create a new poll
 // route  POST /api/polls
@@ -136,12 +135,14 @@ const votePoll = asyncHandler(async (req, res) => {
       optionText: option.optionText,
       votes: option.votes,
     })),
+    totalVotes: poll.totalVotes,
+    isActive: poll.isActive,
+    votes: { ...poll.votes },
   };
-
-  socketIo.emit('votingUpdate', updatedVotingData);
 
   res.status(200).json({
     message: `Congratulations! Your vote has been successfully registered for this poll.`,
+    poll: updatedVotingData,
   });
 });
 
