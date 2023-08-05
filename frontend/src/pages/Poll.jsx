@@ -60,6 +60,11 @@ const Poll = () => {
                     />
                   ))}
               </div>
+              {hasVoted && (
+                <div className='card-footer flex flex-shrink justify-center align-middle'>
+                  {poll.totalVotes} people participated in this poll
+                </div>
+              )}
             </div>
           </div>
         )}
