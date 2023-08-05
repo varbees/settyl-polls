@@ -5,9 +5,9 @@ const setUserCookie = (req, res, next) => {
   if (!req.cookies?.userId) {
     const userId = uuidv4();
     res.cookie('userId', userId, {
-      httpOnly: true,
-      secure: __prod__,
-      sameSite: 'strict',
+      // httpOnly: false,
+      secure: true,
+      sameSite: 'None',
       maxAge: 30 * 24 * 60 * 60 * 1000,
     });
 

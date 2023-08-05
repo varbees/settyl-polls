@@ -1,5 +1,6 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import { Server } from 'socket.io';
 import { __port__, __prod__ } from './constants.js';
 import connectDB from './config/db.js';
@@ -11,8 +12,14 @@ import rateLimitMiddleware from './middleware/rateLimitMiddleware.js';
 connectDB();
 const app = express();
 
-app.use(express.json());
+const corsOptions = {
+  origin: 'http://localhost:5173',
+  methods: ['GET', 'POST', 'PUT'],
+  credentials: true,
+};
 
+app.use(cors(corsOptions));
+app.use(express.json());
 app.use(cookieParser());
 app.use(setUserCookie);
 

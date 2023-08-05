@@ -52,11 +52,15 @@ const getPoll = asyncHandler(async (req, res) => {
 // route  PUT /api/polls/:id
 // access public
 const updatePoll = asyncHandler(async (req, res) => {
-  const { question, options } = req.body;
+  const { question, options, isActive } = req.body;
   let poll = await Poll.findByIdOrSlug(req.params.id);
   if (!poll) {
     res.status(404);
     throw new Error(`Poll not found with id ${req.params.id}`);
+  }
+
+  if (typeof isActive === 'boolean') {
+    poll.isActive = isActive;
   }
 
   if (question) {
@@ -75,7 +79,7 @@ const updatePoll = asyncHandler(async (req, res) => {
       const existingOption = poll.options.find(
         dbOption => dbOption.optionText === option.optionText
       );
-      //add if not
+      //add if no such option exists
       if (!existingOption) {
         poll.options.push({ optionText: option.optionText });
       }
@@ -136,9 +140,9 @@ const votePoll = asyncHandler(async (req, res) => {
 
   socketIo.emit('votingUpdate', updatedVotingData);
 
-  res
-    .status(200)
-    .json({ message: `Voting successfully done on this poll - ${pollId}` });
+  res.status(200).json({
+    message: `Congratulations! Your vote has been successfully registered for this poll.`,
+  });
 });
 
 // @desc  Delete poll by id

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const Navbar = ({ title }) => {
   return (
-    <nav className='navbar mb-8  shadow-lg  bg-neutral text-neutral-content'>
+    <nav className='navbar mb-8  shadow-lg  bg-neutral text-neutral-content justify-center'>
       <div className='container max-auto'>
         <div className='flex-none px-2 mx-2 hover:text-accent'>
           <Link to='/' className='text-3xl font-bold'>
@@ -14,13 +14,13 @@ const Navbar = ({ title }) => {
           <div className='flex justify-end '>
             <Link
               to='/'
-              className='py-2 btn btn-sm btn-secondary border rounded-btn normal-case hover:text-success hover:bg-white hover:border-success mr-2'
+              className='py-2 btn btn-sm btn-secondary border rounded-xl normal-case hover:text-success hover:bg-white hover:border-success mr-2'
             >
               Polls
             </Link>
             <Link
               to='/about'
-              className='py-2 btn btn-sm btn-secondary border rounded-btn normal-case hover:text-success hover:bg-white hover:border-success'
+              className='py-2 btn btn-sm btn-secondary border rounded-xl normal-case hover:text-success hover:bg-white hover:border-success'
             >
               About
             </Link>
