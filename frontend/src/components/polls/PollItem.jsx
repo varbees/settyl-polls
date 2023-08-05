@@ -3,7 +3,10 @@ import { Link } from 'react-router-dom';
 
 const PollItem = ({ poll: { _id, question, isActive, slug } }) => {
   return (
-    <div className='card rounded-xl   w-auto bg-neutral text-neutral-content'>
+    <div
+      key={_id}
+      className='card rounded-xl   w-auto bg-neutral text-neutral-content'
+    >
       <div className='card-body flex flex-col pb-3'>
         <h3 className='card-title mb-4 text-lg font-semibold flex-grow'>
           {question}

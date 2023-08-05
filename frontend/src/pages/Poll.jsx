@@ -21,7 +21,9 @@ const Poll = () => {
   } = useContext(PollContext);
 
   useEffect(() => {
-    getPollById(id);
+    getPollById(id).catch(error => {
+      toast.error('Error fetching poll data:', error);
+    });
     socket.on('votingUpdated', updatedPoll => {
       dispatch({ type: 'GET_POLL', payload: updatedPoll });
     });
@@ -36,7 +38,7 @@ const Poll = () => {
         updatedPoll: { ...status.poll },
       });
       setVotedOption(optionText);
-      toast.info(status.message);
+      toast.success(status.message);
     } catch (err) {
       toast.error('Looks like you already participated on this poll');
     }
@@ -63,9 +65,9 @@ const Poll = () => {
               </h2>
               <div className='card-actions flex-shrink justify-center flex-col items-center'>
                 {Object.keys(poll).length > 0 &&
-                  poll.options.map(option => (
+                  poll.options.map((option, index) => (
                     <VotingOption
-                      key={option._id}
+                      key={option?._id || index}
                       option={option}
                       votedOption={votedOption}
                       poll={poll}

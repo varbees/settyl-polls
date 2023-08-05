@@ -10,11 +10,13 @@ const VotingOption = ({ poll, option, handleVote, hasVoted, checkVote }) => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      await checkVote(poll._id);
+      if (poll?._id) {
+        await checkVote(poll._id);
+      }
       setLoading(false);
     };
     fetchData();
-  }, [poll._id]);
+  }, [poll?._id]);
 
   return loading ? (
     <Spinner />
