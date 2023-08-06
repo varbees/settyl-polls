@@ -12,5 +12,5 @@ MONGO_URI=your_mongodb_uri_goes_here
 ```
 
 > Run ```npm i``` in project > root directory and also in frontend directory.
-> Run "npm run dev" in root direcotry - it runs both frontend and backend concurrenlty
+> Run ```npm run dev``` in root direcotry - it runs both frontend and backend concurrenlty
 > Thats all there is to it. Assuming u have some polls in db.(All the crud routes are available - checkout controllers for more)
